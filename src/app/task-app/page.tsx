@@ -1,29 +1,30 @@
 "use client";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { Task, TASK_STATUS, TaskFormInput } from "../types/task.model";
 
-type TaskType = TASK_STATUS;
-enum TASK_STATUS {
-  TODO = "To do",
-  IN_PROGRESS = "In-progress",
-  DONE = "Done",
-}
+// type TaskType = TASK_STATUS;
+// enum TASK_STATUS {
+//   TODO = "to-do",
+//   IN_PROGRESS = "in-progress",
+//   DONE = "done",
+// }
 // Task Type Definition
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  type: string;
-  createdOn: string;
-  status: TASK_STATUS;
-}
+// interface Task {
+//   id: number;
+//   title: string;
+//   description: string;
+//   type: string;
+//   createdOn: string;
+//   status: TASK_STATUS;
+// }
 
-type TaskFormInput = {
-  title: string;
-  description: string;
-  type: string;
-  status: TaskType;
-}
+// type TaskFormInput = {
+//   title: string;
+//   description: string;
+//   type: string;
+//   status: TaskType;
+// }
 
 // Task Form Component
 const TaskForm: React.FC<{ addTask: (task: Task) => void }> = ({ addTask }) => {
