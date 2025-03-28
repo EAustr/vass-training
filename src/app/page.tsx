@@ -1,15 +1,44 @@
-import Link from 'next/link';
+import { getTasks } from "./actions/task.actions";
+import TaskForm from "../app/components/task.form";
+import { Task } from "../app/types/task.model";
 
-export default function Home() {
+export default async function TaskPage() {
+  const tasks = await getTasks();
+
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Welcome to the Home Page</h1>
-      <Link 
-        href="/task-app" 
-        className="text-blue-500 hover:text-blue-700"
-      >
-        Go to Task Manager
-      </Link>
-    </div>
+    <main className="flex justify-center items-center min-h-screen p-4">
+      <div className="w-full max-w-lg">
+        <h1 className="text-2xl font-bold text-center mb-6">Task Manager</h1>
+        <TaskForm />
+        <TaskList tasks={tasks} />
+      </div>
+    </main>
+  );
+}
+
+function TaskList({ tasks }: { tasks: Task[] }) {
+  return (
+    <ul className="space-y-4 mt-6">
+      {tasks.map((task) => (
+        <li key={task.id} className="p-4 border rounded-lg shadow-md flex justify-between items-center">
+          <div>
+            <h3 className="font-bold">{task.title}</h3>
+            <p>{task.description}</p>
+            <small>
+              {task.type} - {new Date(task.createdOn).toLocaleDateString("en-GB")} - {task.status}
+            </small>
+          </div>
+          <form action={"/delete-task"} method="POST">
+            <input type="hidden" name="id" value={task.id} />
+            <button
+              type="submit"
+              className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Delete
+            </button>
+          </form>
+        </li>
+      ))}
+    </ul>
   );
 }
