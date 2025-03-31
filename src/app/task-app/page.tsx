@@ -1,9 +1,5 @@
-import { getTasks } from "../../actions/task.actions"; 
-import TaskForm from "../../components/task.form"; 
-import { Task } from "../../types/task.model";
 
 export default async function TaskPage() {
-  const tasks = await getTasks(); 
 
   return (
     <main className="flex justify-center items-center min-h-screen p-4">

@@ -1,12 +1,20 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Task, TASK_STATUS } from "../types/task.model";
+import { Task, TaskInputSchema } from "../types/task.model";
+import { z } from "zod";
 
 // Mock database 
 let tasks: Task[] = [];
 
-export async function addTask(data: { title: string; description: string; type: string; status: TASK_STATUS }) {
+export async function getTasks(): Promise<Task[]> {
+  return tasks;
+}
+
+export async function addTask(data: any) {
+  // Validate the data using Zod
+  const parsedData = TaskInputSchema.safeParse(data);
+
   const newTask: Task = {
     id: Date.now(),
     title: data.title,
@@ -19,11 +27,20 @@ export async function addTask(data: { title: string; description: string; type: 
   revalidatePath("/");
 }
 
-export async function deleteTask(id: number) {
+const DeleteTaskSchema = z.object({
+  id: z.number(),
+});
+
+export async function deleteTask(data: any) {
+  const parsedID = DeleteTaskSchema.safeParse(data);
+
+  if (!parsedID.success) {
+    throw new Error("Invalid data provided for deleting a task");
+  }
+
+  const { id } = parsedID.data;
+
   tasks = tasks.filter((task) => task.id !== id);
   revalidatePath("/");
 }
 
-export async function getTasks(): Promise<Task[]> {
-  return tasks;
-}

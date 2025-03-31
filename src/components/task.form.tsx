@@ -2,7 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { addTask } from "../actions/task.actions";
-import { TASK_STATUS } from "../types/task.model";
+import { TaskInputSchema,TaskInput, TASK_STATUS } from "../types/task.model";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const TaskForm: React.FC = () => {
   const {
@@ -10,7 +11,9 @@ const TaskForm: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm<TaskInput>({
+    resolver: zodResolver(TaskInputSchema),
+  });
 
   const onSubmit = async (data: any) => {
     await addTask(data);
@@ -23,7 +26,7 @@ const TaskForm: React.FC = () => {
       <div>
 
       <input
-       {...register("title", { required: "Title is required" })}
+       {...register("title")}
        placeholder="Title"
        className="w-full p-2 border rounded"
       />
@@ -32,17 +35,7 @@ const TaskForm: React.FC = () => {
 
       <div>
       <textarea 
-        {...register("description", 
-          { required: "Description is required",
-            minLength: {
-              value: 10,
-              message: "Description must be at least 10 characters long",
-            },
-            maxLength: {
-              value: 200,
-              message: "Description cant be more than 200 characters long",
-           },
-          })}
+        {...register("description",)}
           placeholder="Description" 
           className="w-full p-2 border rounded">
       </textarea>
@@ -51,8 +44,7 @@ const TaskForm: React.FC = () => {
 
       <div>
       <input
-       {...register("type",
-        { required: "Type is required" })}
+       {...register("type",)}
         placeholder="Type" 
         className="w-full p-2 border rounded" 
       />

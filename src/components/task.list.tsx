@@ -6,7 +6,7 @@ import { deleteTask } from "@/actions/task.actions";
 
 const TaskList = ({ tasks }: { tasks: Task[] }) => {
   const handleDelete = async (id: number) => {
-    await deleteTask(id);
+    await deleteTask({ id });
 };
 
 return (
