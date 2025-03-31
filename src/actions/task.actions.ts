@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { Task, TaskInputSchema } from "../types/task.model";
 import { z } from "zod";
+import { format } from "path";
 
 // Mock database 
 let tasks: Task[] = [];
@@ -31,16 +32,17 @@ const DeleteTaskSchema = z.object({
   id: z.number(),
 });
 
-export async function deleteTask(data: any) {
-  const parsedID = DeleteTaskSchema.safeParse(data);
+export async function deleteTask(formData: FormData) {
+  const  id  = Number(formData.get("id"));
 
+  const parsedID = DeleteTaskSchema.safeParse({ id });
+  // console.error(parsedID.error?.format());
   if (!parsedID.success) {
+    // console.error("Invalid data provided for deleting a task:", parsedID.error);
     throw new Error("Invalid data provided for deleting a task");
   }
 
-  const { id } = parsedID.data;
-
-  tasks = tasks.filter((task) => task.id !== id);
+  tasks = tasks.filter((task) => task.id !== parsedID.data.id);
   revalidatePath("/");
 }
 
