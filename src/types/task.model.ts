@@ -9,19 +9,21 @@ export enum TASK_STATUS {
   export type TaskType = TASK_STATUS;
   
   // Interface for a task
-  export interface Task {
+  // export interface Task {
+  //   id: number;
+  //   title: string;
+  //   description: string;
+  //   type: string;
+  //   createdOn: string;
+  //   status: TaskType;
+  // }
+  
+  // Type for task form input
+  export type Task = {
     id: number;
     title: string;
     description: string;
     type: string;
     createdOn: string;
-    status: TaskType;
-  }
-  
-  // Type for task form input
-  export type TaskFormInput = {
-    title: string;
-    description: string;
-    type: string;
     status: TaskType;
   };

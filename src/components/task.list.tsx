@@ -1,23 +1,10 @@
-import { getTasks } from "../../actions/task.actions"; 
-import TaskForm from "../../components/task.form"; 
-import { Task } from "../../types/task.model";
+import { Task } from "@/types/task.model";
 
-export default async function TaskPage() {
-  const tasks = await getTasks(); 
 
-  return (
-    <main className="flex justify-center items-center min-h-screen p-4">
-      <div className="w-full max-w-lg">
-        <h1 className="text-2xl font-bold text-center mb-6">Task Manager</h1>
-        <TaskForm /> 
-        <TaskList tasks={tasks} /> 
-      </div>
-    </main>
-  );
-}
 
-function TaskList({ tasks }: { tasks: Task[] }) {
-  return (
+const TaskList = ({ tasks }: { tasks: Task[] }) => {
+
+return (
     <ul className="space-y-4 mt-6">
       {tasks.map((task) => (
         <li key={task.id} className="p-4 border rounded-lg shadow-md flex justify-between items-center">
@@ -42,3 +29,5 @@ function TaskList({ tasks }: { tasks: Task[] }) {
     </ul>
   );
 }
+
+export default TaskList;

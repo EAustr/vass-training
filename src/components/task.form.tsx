@@ -10,10 +10,12 @@ const TaskForm: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     
+    const form = event.currentTarget;
     const formData = new FormData(event.currentTarget);
     await addTask(formData);
 
-    event.currentTarget.reset();
+    form.reset();
+    // event.currentTarget.reset();
     setLoading(false);
   };
 
