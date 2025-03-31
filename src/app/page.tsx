@@ -1,6 +1,6 @@
-import { getTasks } from "./actions/task.actions";
-import TaskForm from "../app/components/task.form";
-import { Task } from "../app/types/task.model";
+import { getTasks } from "../actions/task.actions";
+import TaskForm from "../components/task.form";
+import TaskList from "../components/task.list";
 
 export default async function TaskPage() {
   const tasks = await getTasks();
@@ -13,32 +13,5 @@ export default async function TaskPage() {
         <TaskList tasks={tasks} />
       </div>
     </main>
-  );
-}
-
-function TaskList({ tasks }: { tasks: Task[] }) {
-  return (
-    <ul className="space-y-4 mt-6">
-      {tasks.map((task) => (
-        <li key={task.id} className="p-4 border rounded-lg shadow-md flex justify-between items-center">
-          <div>
-            <h3 className="font-bold">{task.title}</h3>
-            <p>{task.description}</p>
-            <small>
-              {task.type} - {new Date(task.createdOn).toLocaleDateString("en-GB")} - {task.status}
-            </small>
-          </div>
-          <form action={"/delete-task"} method="POST">
-            <input type="hidden" name="id" value={task.id} />
-            <button
-              type="submit"
-              className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              Delete
-            </button>
-          </form>
-        </li>
-      ))}
-    </ul>
   );
 }
