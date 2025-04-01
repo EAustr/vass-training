@@ -1,8 +1,7 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { addTask } from "../actions/task.actions";
-import { TaskInputSchema,TaskInput, TASK_STATUS } from "../types/task.model";
+import { TaskFormSchema,TaskInput, TASK_STATUS } from "../types/task.model";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const TaskForm: React.FC = () => {
@@ -12,7 +11,7 @@ const TaskForm: React.FC = () => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<TaskInput>({
-    resolver: zodResolver(TaskInputSchema),
+    resolver: zodResolver(TaskFormSchema),
   });
 
   const onSubmit = async (data: any) => {

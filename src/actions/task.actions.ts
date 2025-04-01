@@ -1,9 +1,7 @@
 "use server";
-
 import { revalidatePath } from "next/cache";
-import { Task, TaskInputSchema } from "../types/task.model";
+import { Task, TaskFormSchema } from "../types/task.model";
 import { z } from "zod";
-import { format } from "path";
 
 // Mock database 
 let tasks: Task[] = [];
@@ -14,7 +12,7 @@ export async function getTasks(): Promise<Task[]> {
 
 export async function addTask(data: any) {
   // Validate the data using Zod
-  const parsedData = TaskInputSchema.safeParse(data);
+  const parsedData = TaskFormSchema.safeParse(data);
 
   const newTask: Task = {
     id: Date.now(),
