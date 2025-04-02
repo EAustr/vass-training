@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
 const TaskForm: React.FC = () => {
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
   const {
     register,
     handleSubmit,

@@ -1,5 +1,4 @@
 "use server";
-
 import Database from "better-sqlite3";
 import path from "path";
 import { revalidatePath } from "next/cache";
@@ -20,11 +19,13 @@ db.exec(`
 `);
 
 export async function getTasks(): Promise<Task[]> {
+  await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
   const rows = db.prepare("SELECT * FROM tasks").all();
   return rows as Task[];
 }
 
 export async function addTask(data: any) {
+  await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
   // Validate the data using Zod
   const parsedData = TaskFormSchema.safeParse(data);
 
@@ -62,5 +63,10 @@ export async function deleteTask(formData: FormData) {
 export async function getTaskById(id: number): Promise<Task | null> {
   const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
   return task as Task;
+}
+
+export async function getTaskCount(): Promise<number> {
+  const count = db.prepare("SELECT COUNT(*) AS count FROM tasks").get() as { count: number };
+  return count.count;
 }
 
