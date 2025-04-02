@@ -39,7 +39,7 @@ export async function addTask(data: any) {
     "INSERT INTO tasks (title, description, type, createdOn, status) VALUES (?, ?, ?, ?, ?)"
   ).run(title, description, type, createdOn, status);
 
-  revalidatePath("/task-app/task-list");
+  revalidatePath("/tasks");
 }
 
 const DeleteTaskSchema = z.object({
@@ -56,7 +56,7 @@ export async function deleteTask(formData: FormData) {
   }
 
   db.prepare("DELETE FROM tasks WHERE id = ?").run(id);
-  revalidatePath("/task-app/task-list");
+  revalidatePath("/tasks");
 }
 
 export async function getTaskById(id: number): Promise<Task | null> {

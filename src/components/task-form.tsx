@@ -15,6 +15,7 @@ const TaskForm: React.FC = () => {
   });
 
   const onSubmit = async (data: any) => {
+    console.log("Form data:", data);
     await addTask(data);
     reset();
   };
