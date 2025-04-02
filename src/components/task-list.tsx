@@ -1,22 +1,20 @@
-"use server";
-import { Task } from "@/types/task.model";
-import { deleteTask } from "@/actions/task.actions";
+import { deleteTask, getTasks } from "@/actions/task.actions";
+import Link from "next/link";
 
 
-const TaskList = ({ tasks }: { tasks: Task[] }) => {
+const TaskList = async() => {
+  const tasks = await getTasks(); 
 
 return (
     <ul className="space-y-4 mt-6">
       {tasks.map((task) => (
-        <li key={task.id} className="p-4 border rounded-lg shadow-md flex justify-between items-center">
+        <Link href={`/tasks/${task.id}`} key={task.id} className="p-4 border rounded-lg shadow-md flex justify-between items-center">
           <div>
             <h3 className="font-bold">{task.title}</h3>
-            <p>{task.description}</p>
             <small>
               {task.type} - {new Date(task.createdOn).toLocaleDateString("en-GB")} - {task.status.toUpperCase()}
             </small>
           </div>
-
           <form action={deleteTask}>
             <input type="hidden" name="id" value={task.id} />
             <button
@@ -25,7 +23,7 @@ return (
               Delete
             </button>
           </form>
-        </li>
+        </Link>
       ))}
     </ul>
   );

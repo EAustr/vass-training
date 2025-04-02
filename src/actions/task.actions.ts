@@ -59,3 +59,8 @@ export async function deleteTask(formData: FormData) {
   revalidatePath("/task-app/task-list");
 }
 
+export async function getTaskById(id: number): Promise<Task | null> {
+  const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
+  return task as Task;
+}
+
