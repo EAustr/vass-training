@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { addTask } from "../actions/task.actions";
 import { TaskFormSchema,TaskInput, TASK_STATUS } from "../types/task.model";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 const TaskForm: React.FC = () => {
+  const router = useRouter(); // Initialize the router
   const {
     register,
     handleSubmit,
@@ -14,11 +16,16 @@ const TaskForm: React.FC = () => {
     resolver: zodResolver(TaskFormSchema),
   });
 
-  const onSubmit = async (data: any) => {
-    console.log("Form data:", data);
-    await addTask(data);
-    reset();
+  const onSubmit = async (data: TaskInput) => {
+    try {
+      await addTask(data);
+      reset();
+      router.push("/tasks");
+    } catch (error) {
+      console.error("Failed to add task:", error);
+    }
   };
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 border rounded-lg shadow-md">
