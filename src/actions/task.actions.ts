@@ -4,6 +4,7 @@ import path from "path";
 import { revalidatePath } from "next/cache";
 import { Task, TaskFormSchema } from "../types/task.model";
 import { z } from "zod";
+import { useTaskContext } from "@/app/context/task.context";
 
 const db = new Database(path.join(process.cwd(), "database", "tasks.db"));
 
@@ -19,13 +20,13 @@ db.exec(`
 `);
 
 export async function getTasks(): Promise<Task[]> {
-  await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
+  // await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
   const rows = db.prepare("SELECT * FROM tasks").all();
   return rows as Task[];
 }
 
-export async function addTask(data: any) {
-  await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
+export async function addTask(data: any)  {
+  // await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
   // Validate the data using Zod
   const parsedData = TaskFormSchema.safeParse(data);
 
@@ -36,11 +37,19 @@ export async function addTask(data: any) {
   const { title, description, type, status } = parsedData.data;
   const createdOn = new Date().toISOString();
 
-  db.prepare(
+  const result = db.prepare(
     "INSERT INTO tasks (title, description, type, createdOn, status) VALUES (?, ?, ?, ?, ?)"
   ).run(title, description, type, createdOn, status);
-
-  revalidatePath("/tasks");
+  
+  const newTask: Task = {
+    id: result.lastInsertRowid as number,
+    title,
+    description,
+    type,
+    createdOn,
+    status,
+  };
+  return newTask;
 }
 
 const DeleteTaskSchema = z.object({
@@ -63,10 +72,5 @@ export async function deleteTask(formData: FormData) {
 export async function getTaskById(id: number): Promise<Task | null> {
   const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
   return task as Task;
-}
-
-export async function getTaskCount(): Promise<number> {
-  const count = db.prepare("SELECT COUNT(*) AS count FROM tasks").get() as { count: number };
-  return count.count;
 }
 
