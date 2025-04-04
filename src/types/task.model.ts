@@ -1,15 +1,11 @@
 import { z } from "zod";
-
-
 // Enum for task statuses
 export enum TASK_STATUS {
     TODO = "to-do",
     IN_PROGRESS = "in-progress",
     DONE = "done",
-  }
+}
   
-// Zod schema for task status
-const TasStatusSchema = z.nativeEnum(TASK_STATUS);
 
 export const TaskSchema = z.object({
   id: z.number(),
@@ -22,11 +18,11 @@ export const TaskSchema = z.object({
   .string()
   .min(1, { message: "Type is required" }),
   createdOn: z.string(),
-  status: TasStatusSchema,
+  status: z.nativeEnum(TASK_STATUS).default(TASK_STATUS.TODO),
 })
 
 //Zod schema for task input (used in forms)
-export const TaskInputSchema = TaskSchema.omit({ id: true, createdOn: true });
+export const TaskFormSchema = TaskSchema.omit({ id: true, createdOn: true });
 
 export type Task = z.infer<typeof TaskSchema>;
-export type TaskInput = z.infer<typeof TaskInputSchema>;
+export type TaskInput = z.infer<typeof TaskFormSchema>;
