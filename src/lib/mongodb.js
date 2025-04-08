@@ -16,14 +16,14 @@ if (!cached) {
 
 async function dbConnect(databaseName = "test") {
   if (cached.conn) {
-    console.log(`MongoDB is already connected to ${databaseName}`);
+    // console.log(`MongoDB is already connected to ${databaseName}`);
     return mongoose.connection.useDb(databaseName); // Switch to the specified database
   }
 
   if (!cached.promise) {
-    console.log("MongoDB is connecting...");
+    // console.log("MongoDB is connecting...");
     cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      console.log("Connected to MongoDB");
+      // console.log("Connected to MongoDB");
       return mongoose;
     });
   }
