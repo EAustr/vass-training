@@ -1,29 +1,37 @@
 import dbConnect from "@/lib/mongodb";
-import { User } from "@/models/User";
+import { Task as TaskModel } from "@/models/Task";
+import { Task } from "@/types/task.model";
+import { TaskSchema } from "@/types/task.model";
 
-export async function getUsers() {
-  await dbConnect();
-  const users = await User.find({});
-  console.log(users);
-  return users;
-}
+export async function getTasks(): Promise<Task[]> {
+    await dbConnect();
+    const tasks = await TaskModel.find({}).lean();
 
-export default async function Page() {
-  const users = await getUsers();
+    return tasks.map((task: any) => ({
+      ...task,
+      id: task._id.toString(),
+    }));
+  }
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>User List</h1>
-      <ul>
-        {users.map((user: any) => (
-          <li key={user._id}>
-            <strong>Name:</strong> {user.name} <br />
-            <strong>Email:</strong> {user.email} <br />
-            <strong>Password:</strong> {user.password} <br />
-            <hr />
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+  export default async function Page() {
+    const tasks = await getTasks();
+  
+    return (
+      <div style={{ padding: "20px" }}>
+        <h1>Task List</h1>
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.id}>
+              <strong>Title:</strong> {task.title} <br />
+              <strong>Description:</strong> {task.description} <br />
+              <strong>Type:</strong> {task.type} <br />
+              <strong>Status:</strong> {task.status} <br />
+              <strong>Created On:</strong>{" "}
+              {task.createdOn ? new Date(task.createdOn).toLocaleString() : "N/A"} <br />
+              <hr />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }

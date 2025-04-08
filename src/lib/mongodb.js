@@ -14,7 +14,7 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
-async function dbConnect(databaseName = "sample_mflix") {
+async function dbConnect(databaseName = "test") {
   if (cached.conn) {
     console.log(`MongoDB is already connected to ${databaseName}`);
     return mongoose.connection.useDb(databaseName); // Switch to the specified database
