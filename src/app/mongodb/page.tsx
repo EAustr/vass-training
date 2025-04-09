@@ -1,11 +1,10 @@
 import dbConnect from "@/lib/mongodb";
-import { Task as TaskModel } from "@/models/Task";
+import { mTaskSchema } from "@/models/task.mongoose";
 import { Task } from "@/types/task.model";
-import { TaskSchema } from "@/types/task.model";
 
 export async function getTasks(): Promise<Task[]> {
     await dbConnect();
-    const tasks = await TaskModel.find({}).lean();
+    const tasks = await mTaskSchema.find({}).lean();
 
     return tasks.map((task: any) => ({
       ...task,

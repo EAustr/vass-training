@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import { TASK_STATUS } from "../types/task.model.ts"; // Adjust the import path as necessary
-import { faker } from "@faker-js/faker";
+import { TASK_STATUS } from "../types/task.model.ts";
 
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -14,4 +13,4 @@ const TaskSchema = new mongoose.Schema({
   },
 });
 
-export const Task = mongoose.models.Task || mongoose.model("Task", TaskSchema);
+export const mTaskSchema = mongoose.model("Task", TaskSchema);
