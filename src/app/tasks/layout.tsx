@@ -13,6 +13,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </TaskProvider>
       </body>
     </html>
-
   );
 }

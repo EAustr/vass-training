@@ -2,7 +2,6 @@
 import { deleteTask} from "@/actions/task.actions";
 import Link from "next/link";
 import { useTaskContext } from "@/app/context/task.context";
-import { useEffect, useState } from "react";
 
 const TaskList = () => {
   const { tasks, deleteFromContext } = useTaskContext();
@@ -44,7 +43,6 @@ const TaskList = () => {
             <button
               onClick={() => handleDelete(task.id)}
               className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-              style={{ cursor: "pointer" }}
             >
               Delete
             </button>
