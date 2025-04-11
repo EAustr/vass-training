@@ -5,7 +5,7 @@ import { TaskFormSchema,TaskInput, TASK_STATUS } from "../types/task.model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-const TaskForm: React.FC = () => {
+const TaskForm = () => {
   const router = useRouter();
   const {
     register,
@@ -14,7 +14,7 @@ const TaskForm: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<TaskInput>({
     resolver: zodResolver(TaskFormSchema),
-  });
+});
 
   const onSubmit = async (data: TaskInput) => {
     try {
@@ -29,7 +29,6 @@ const TaskForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 border rounded-lg shadow-md">
-
       <div>
 
       <input

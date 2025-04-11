@@ -51,7 +51,7 @@ export default function RootLayout({
             </Link>
           </div>
 
-          <main className="flex-grow">{children}</main>
+          <main className="flex justify-center min-h-screen p-4">{children}</main>
         </div>
       </body>
     </html>

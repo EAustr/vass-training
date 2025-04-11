@@ -2,7 +2,6 @@ import { getTaskCount } from "@/actions/task.actions";
 export default async function Loading(){
     const taskCount = await getTaskCount();
     return (
-      <main className="flex flex-col items-center min-h-screen p-6">
         <div className="w-full max-w-lg">
           <h1 className="text-2xl font-bold text-center mb-6">Loading Tasks...</h1>
           <ul className="space-y-4">
@@ -23,7 +22,6 @@ export default async function Loading(){
             ))}
           </ul>
         </div>
-      </main>
     );
 };
   
