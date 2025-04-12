@@ -16,7 +16,7 @@ const TaskForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<TaskInput>({
     resolver: zodResolver(TaskFormSchema),
-  });
+});
 
   const onSubmit = async (data: TaskInput) => {
     try {

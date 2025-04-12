@@ -10,7 +10,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="flex flex-col min-h-screen">
             {children}
           </div>
-        </TaskProvider>
+
+          <main className="flex justify-center min-h-screen p-4">{children}</main>
+        </div>
       </body>
     </html>
   );
