@@ -1,8 +1,22 @@
-import { deleteTask, getTasks } from "@/actions/task.actions";
+"use client";
+import { deleteTask} from "@/actions/task.actions";
 import Link from "next/link";
+import { useTaskContext } from "@/app/context/task.context";
 
-const TaskList = async () => {
-  const tasks = await getTasks();
+const TaskList = () => {
+  const { tasks, deleteFromContext } = useTaskContext();
+
+  const handleDelete = async (id: number) => {
+    try{
+      const formData = new FormData();
+      formData.append("id", id.toString());
+      
+      await deleteTask(formData);
+      deleteFromContext(id);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
 
   return (
     <ul className="space-y-4 mt-6">
@@ -26,11 +40,12 @@ const TaskList = async () => {
 
           <form action={deleteTask}>
             <input type="hidden" name="id" value={task.id} />
-              <button
-                className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
+            <button
+              className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+              style={{ cursor: "pointer" }}
+            >
+              Delete
+            </button>
           </form>
 
         </li>
