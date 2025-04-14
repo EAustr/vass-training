@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTaskContext } from "@/app/context/task.context";
 
-const TaskForm: React.FC = () => {
+const TaskForm = () => {
   const router = useRouter();
   const { addToContext } = useTaskContext();
   const {

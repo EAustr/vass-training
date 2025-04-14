@@ -11,7 +11,7 @@ export enum TASK_STATUS {
 extendZod(z);
 
 export const zTaskSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string().min(1, { message: "Title is required" }),
   description: z
     .string()

@@ -11,15 +11,6 @@ export default function TaskDetails({ task }: { task: Task }) {
           {task.type} - {new Date(task.createdOn).toLocaleDateString("en-GB")} - {task.status.toUpperCase()}
         </small>
       </div>
-      <form action={deleteTask}>
-        <input type="hidden" name="id" value={task.id} />
-        <button
-          className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-          style={{ cursor: "pointer" }}
-        >
-          Delete
-        </button>
-      </form>
     </div>
   );
 }

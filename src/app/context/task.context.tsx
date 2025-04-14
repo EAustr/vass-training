@@ -6,7 +6,7 @@ import { getTasks } from "@/actions/task.actions";
 type TaskContextType = {
   tasks: Task[];
   addToContext: (task: Task) => void;
-  deleteFromContext: (taskId: number) => void;
+  deleteFromContext: (taskId: string) => void;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -34,7 +34,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTasks((prevTasks) => [...prevTasks, task]);
   };
 
-  const deleteFromContext = (taskId: number) => {
+  const deleteFromContext = (taskId: string) => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
   };
 

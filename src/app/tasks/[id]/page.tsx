@@ -1,37 +1,27 @@
-import TaskDetails from "@/components/task-details";
 import { getTaskById } from "@/actions/task.actions";
-import Link from "next/link";
+import TaskDetails from "@/components/task-details";
 
-export default async function TaskDetailsPage({ params }: { params: { id: string } }) {
-    const taskId = Number(params.id);
 
-    if (isNaN(taskId)) {
-      return <p>Invalid task ID</p>;
-    }
-    const task = await getTaskById(taskId);
+export default async function TaskDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+ 
+  try {
+    const task = await getTaskById(id);
+
     if (!task) {
-      return (
-        <main className="flex justify-center items-center min-h-screen p-4">
-          <div className="w-full max-w-lg">
-            <h1 className="text-2xl font-bold text-center mb-6">No tasks created</h1>
-            <Link 
-              href={"/tasks/create"}
-              className="block text-center bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-              >
-                Create Task
-            </Link>
-          </div>
-        </main>
-      );
+      return <div>Task not found</div>;
     }
 
     return (
-      <main className="flex justify-center items-center min-h-screen p-4">
         <div className="w-full max-w-lg">
-          <h1 className="text-2xl font-bold text-center mb-6">Task Details</h1>
-          <TaskDetails task={task}/>
+          <TaskDetails task={task} />
         </div>
-      </main>
     );
+  } catch (error) {
+    if (error instanceof Error) {
+      return <div>Error: {error.message}</div>;
+    }
+    return <div>An unknown error occurred</div>;
   }
-  
+}

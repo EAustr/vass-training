@@ -39,7 +39,7 @@ export default function MainLayout({
             </Link>
           </div>
 
-          <main className="flex-grow">{children}</main>
+          <main className="flex justify-center p-4 w-full">{children}</main>
         </div>
       </body>
     </html>

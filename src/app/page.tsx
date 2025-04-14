@@ -1,20 +1,12 @@
 import Link from "next/link";
 
 
-export default async function Page() {
+export default function Page() {
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <Link
         href="/tasks"
-        style={{
-          display: "inline-block",
-          padding: "10px 20px",
-          backgroundColor: "#0070f3",
-          color: "#ffffff",
-          borderRadius: "5px",
-          fontSize: "16px",
-          fontWeight: "bold",
-        }}
+        className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition"
       >
         Task Manager
       </Link>

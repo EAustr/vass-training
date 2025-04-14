@@ -1,33 +1,24 @@
 "use server";
-import Database from "better-sqlite3";
-import path from "path";
 import { revalidatePath } from "next/cache";
-import { Task, TaskFormSchema } from "../types/task.model";
-import { z } from "zod";
-import { useTaskContext } from "@/app/context/task.context";
-
-const db = new Database(path.join(process.cwd(), "database", "tasks.db"));
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS tasks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
-    type TEXT NOT NULL,
-    createdOn TEXT NOT NULL,
-    status TEXT NOT NULL
-  ) 
-`);
+import { Task, TASK_STATUS, TaskFormSchema } from "../types/task.model";
+import dbConnect from "@/lib/mongodb";
+import { mTaskSchema } from "@/models/task.mongoose";
 
 export async function getTasks(): Promise<Task[]> {
-  // await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
-  const rows = db.prepare("SELECT * FROM tasks").all();
-  return rows as Task[];
+  await dbConnect();
+  const tasks = await mTaskSchema.find({}).lean();
+  
+  return tasks.map((task: any) => ({
+    id: task._id.toString(),
+    title: task.title,
+    description: task.description,
+    type: task.type,
+    createdOn: task.createdOn,
+    status: task.status as TASK_STATUS,
+  }));
 }
 
-export async function addTask(data: any)  {
-  // await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate a delay
-  // Validate the data using Zod
+export async function addTask(data: any) {
   const parsedData = TaskFormSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -37,40 +28,57 @@ export async function addTask(data: any)  {
   const { title, description, type, status } = parsedData.data;
   const createdOn = new Date().toISOString();
 
-  const result = db.prepare(
-    "INSERT INTO tasks (title, description, type, createdOn, status) VALUES (?, ?, ?, ?, ?)"
-  ).run(title, description, type, createdOn, status);
-  
-  const newTask: Task = {
-    id: result.lastInsertRowid as number,
+  await dbConnect();
+  const newTask = new mTaskSchema({
+    title,
+    description,
+    type,
+    createdOn,
+    status,
+  });
+
+  await newTask.save();
+  return {
+    id: newTask._id.toString(),
     title,
     description,
     type,
     createdOn,
     status,
   };
-  return newTask;
 }
 
-const DeleteTaskSchema = z.object({
-  id: z.number(),
-});
 
 export async function deleteTask(formData: FormData) {
-  const  id  = Number(formData.get("id"));
-  const parsedID = DeleteTaskSchema.safeParse({ id });
-  // console.error(parsedID.error?.format());
-  if (!parsedID.success) {
-    // console.error("Invalid data provided for deleting a task:", parsedID.error);
-    throw new Error("Invalid data provided for deleting a task");
-  }
+  const id = formData.get("id");
+  if (!id || typeof id !== "string") {
+    throw new Error("Invalid ID format");
+  }  
 
-  db.prepare("DELETE FROM tasks WHERE id = ?").run(id);
+  await dbConnect();
+  await mTaskSchema.findByIdAndDelete(id);
   revalidatePath("/tasks");
 }
 
-export async function getTaskById(id: number): Promise<Task | null> {
-  const task = db.prepare("SELECT * FROM tasks WHERE id = ?").get(id);
-  return task as Task;
-}
+export async function getTaskById(id: string): Promise<Task | null> {
+  await dbConnect();
+  const task = await mTaskSchema.findById(id).lean<{
+    _id: { toString(): string };
+    title: string;
+    description: string;
+    type: string;
+    createdOn: string;
+    status: string;
+  }>();
 
+  if (!task) return null;
+
+  return {
+    id: task._id.toString(),
+    title: task.title,
+    description: task.description,
+    type: task.type,
+    createdOn: task.createdOn,
+    status: task.status as TASK_STATUS,
+  };
+}
