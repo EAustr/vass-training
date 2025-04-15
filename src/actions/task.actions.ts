@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { Task, TASK_STATUS, TaskFormSchema } from "../types/task.model";
 import dbConnect from "@/lib/mongodb";
 import { mTaskSchema } from "@/models/task.mongoose";
+import { create } from "domain";
 
 export async function getTasks(): Promise<Task[]> {
   await dbConnect();
@@ -26,26 +27,21 @@ export async function addTask(data: any) {
   }
 
   const { title, description, type, status } = parsedData.data;
-  const createdOn = new Date().toISOString();
 
   await dbConnect();
-  const newTask = new mTaskSchema({
+  const createdTask = await mTaskSchema.create({
     title,
     description,
     type,
-    createdOn,
     status,
+    createdOn: new Date().toISOString(),
   });
-
-  await newTask.save();
+  
   return {
-    id: newTask._id.toString(),
-    title,
-    description,
-    type,
-    createdOn,
-    status,
-  };
+    ...createdTask.toObject(),
+    id: createdTask._id.toString(),
+  }
+
 }
 
 
