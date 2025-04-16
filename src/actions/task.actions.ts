@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { Task, TASK_STATUS, TaskFormSchema } from "../types/task.model";
 import dbConnect from "@/lib/mongodb";
 import { mTaskSchema } from "@/models/task.mongoose";
-import { create } from "domain";
+import { redirect } from "next/navigation";
 
 export async function getTasks(): Promise<Task[]> {
   await dbConnect();
@@ -44,7 +44,6 @@ export async function addTask(data: any) {
 
 }
 
-
 export async function deleteTask(formData: FormData) {
   const id = formData.get("id");
   if (!id || typeof id !== "string") {
@@ -77,4 +76,27 @@ export async function getTaskById(id: string): Promise<Task | null> {
     createdOn: task.createdOn,
     status: task.status as TASK_STATUS,
   };
+}
+
+export async function updateTask(formData: FormData) {
+  const id = formData.get("id");
+  const title = formData.get("title");
+  const description = formData.get("description");
+  const type = formData.get("type");
+  const status = formData.get("status");
+
+  if (!id || typeof id !== "string") {
+    throw new Error("Invalid ID format");
+  }
+
+  await dbConnect();
+  await mTaskSchema.findByIdAndUpdate(id, {
+    title,
+    description,
+    type,
+    status,
+  });
+
+  revalidatePath(`/tasks/${id}`);
+  redirect(`/tasks/${id}`);
 }
