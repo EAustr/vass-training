@@ -6,10 +6,10 @@ import { useTaskContext } from "@/app/context/task.context";
 const TaskList = () => {
   const { tasks, deleteFromContext } = useTaskContext();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try{
       const formData = new FormData();
-      formData.append("id", id.toString());
+      formData.append("id", id);
       
       await deleteTask(formData);
       deleteFromContext(id);
@@ -37,17 +37,13 @@ const TaskList = () => {
               </small>
             </div>
           </Link>
-
-          <form action={deleteTask}>
-            <input type="hidden" name="id" value={task.id} />
-            <button
-              className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-              style={{ cursor: "pointer" }}
-            >
-              Delete
-            </button>
-          </form>
-
+          <button
+            onClick={() => handleDelete(task.id)}
+            className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
+            style={{ cursor: "pointer" }}
+          >
+            Delete
+          </button>
         </li>
       ))}
     </ul>

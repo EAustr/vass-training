@@ -1,7 +1,18 @@
+import { getTaskById } from "@/actions/task.actions";
+import { notFound } from "next/navigation";
 import { Task } from "@/types/task.model";
-import { deleteTask } from "@/actions/task.actions";
 
-export default function TaskDetails({ task }: { task: Task }) {
+type Props = {
+  id: string;
+};
+
+export default async function TaskDetails({ id }: Props) {
+  const task: Task | null = await getTaskById(id);
+
+  if (!task) {
+    notFound();
+  }
+
   return (
     <div className="p-4 border rounded-lg shadow-md flex justify-between items-center">
       <div>
@@ -11,14 +22,6 @@ export default function TaskDetails({ task }: { task: Task }) {
           {task.type} - {new Date(task.createdOn).toLocaleDateString("en-GB")} - {task.status.toUpperCase()}
         </small>
       </div>
-      <form action={deleteTask}>
-        <input type="hidden" name="id" value={task.id} />
-        <button
-          className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-        >
-          Delete
-        </button>
-      </form>
     </div>
   );
 }

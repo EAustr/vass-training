@@ -60,7 +60,7 @@ const TaskForm = () => {
       </div>
 
       <div>
-        <select {...register("status")} className="w-full p-2 border rounded">
+        <select {...register("status")} className="w-full p-2 border rounded" defaultValue={TASK_STATUS.TODO}>
           <option value={TASK_STATUS.TODO}>To Do</option>
           <option value={TASK_STATUS.IN_PROGRESS}>In Progress</option>
           <option value={TASK_STATUS.DONE}>Done</option>
