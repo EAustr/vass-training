@@ -24,8 +24,10 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const tasksFromDb = await getTasks();
-      setTasks(tasksFromDb);
+      getTasks().then((tasks) => {setTasks(tasks);
+      }).catch((error) => {
+        console.error("Failed to fetch tasks:", error);
+      })
     };
     fetchTasks();
   }, []);
