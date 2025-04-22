@@ -11,7 +11,7 @@ const TaskSchema = new mongoose.Schema({
     enum: Object.values(TASK_STATUS),
     default: TASK_STATUS.TODO,
   },
-  assignedTo: { type: String, default: null },
+  assignedTo: { type: String, default: "UNASSIGNED" },
 });
 
 export type TaskDoc = InferSchemaType<typeof TaskSchema> & { _id: mongoose.Types.ObjectId };

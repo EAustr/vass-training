@@ -1,21 +1,33 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { addTask } from "../actions/task.actions";
-import { TaskFormSchema, TaskInput, TASK_STATUS } from "../types/task.model";
+import { taskFormSchema, TaskInput, TASK_STATUS } from "../types/task.model";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTaskContext } from "@/app/context/task.context";
 
-const TaskForm = () => {
+type User = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  username: string;
+};
+
+type TaskFormProps = {
+  users: User[];
+};
+
+const TaskForm = ({ users }: TaskFormProps) => {
   const router = useRouter();
   const { addToContext } = useTaskContext();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<TaskInput>({
-    resolver: zodResolver(TaskFormSchema),
+    resolver: zodResolver(taskFormSchema),
 });
 
   const onSubmit = async (data: TaskInput) => {
@@ -66,9 +78,30 @@ const TaskForm = () => {
           <option value={TASK_STATUS.DONE}>Done</option>
         </select>
         {errors.status && (<p className="error">{String(errors.status.message)}</p>)}
-      </div>  
+      </div> 
+      
+      <div>
+        <label className="block font-medium">Assigned To</label>
+        <select
+          {...register("assignedTo")}
+          className="w-full p-2 border rounded"
+          defaultValue="UNASSIGNED"
+        >
+          <option value="UNASSIGNED">Unassigned</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.first_name} {user.last_name} ({user.username})
+            </option>
+          ))}
+        </select>
+        {errors.assignedTo && <p className="error">{String(errors.assignedTo.message)}</p>}
+      </div>
 
-      <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600" disabled={isSubmitting}>
+      <button 
+      type="submit" 
+      className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600" 
+      disabled={isSubmitting}
+      >
         {isSubmitting ? "Adding..." : "Add Task"}
       </button>
     </form>

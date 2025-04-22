@@ -4,9 +4,9 @@ import { mUserSchema } from "@/models/user.mongoose";
 
 export async function getUsers() {
     await dbConnect();
-    const user = await mUserSchema.find().lean();
+    const users = await mUserSchema.find().lean();
 
-    return user?.map((user: any) => ({
+    return users.map((user: any) => ({
         id: user._id.toString(),
         username: user.username,
         password: user.password,

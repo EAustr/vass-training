@@ -1,11 +1,13 @@
 import { updateTask } from "@/actions/task.actions";
 import { Task, TASK_STATUS } from "@/types/task.model";
+import { getUsers } from "@/actions/user.actions";
 
 type Props = {
   task: Task;
 };
 
-export default function TaskEdit({ task }: Props) {
+export default async function TaskEdit({ task }: Props) {
+  const users = await getUsers();
   return (
     <div >
       <h3 className="font-bold text-xl mb-4">Edit Task</h3>
@@ -49,15 +51,23 @@ export default function TaskEdit({ task }: Props) {
             <option value={TASK_STATUS.DONE}>Done</option>
           </select>
         </div>
+    
         <div>
           <label className="block font-medium">Assigned To</label>
-          <input
-            type="text"
+          <select
             name="assignedTo"
-            defaultValue={task.assignedTo || "Unassigned"}
+            defaultValue={task.assignedTo || "UNASSIGNED"}
             className="w-full p-2 border rounded"
-            />
+          >
+            <option value="UNASSIGNED">Unassigned</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.first_name} {user.last_name} ({user.username})
+              </option>
+            ))}
+          </select>
         </div>
+
         <button
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
