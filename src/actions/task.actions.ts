@@ -34,6 +34,7 @@ export async function addTask(data: any) {
     description,
     type,
     status,
+    assignedTo,
     createdOn: new Date().toISOString(),
   });
   
@@ -86,11 +87,11 @@ export async function updateTask(formData: FormData) {
     throw new Error("Invalid data provided for task update");
   }  
   
-  const { id, title, description, type, status } = parsedData.data;
+  const { id, title, description, type, status, assignedTo } = parsedData.data;
   await dbConnect();
   const updatedTask = await mTaskSchema.findByIdAndUpdate(
     id,
-    { title, description, type, status },
+    { title, description, type, status, assignedTo },
     { new: true }
   );
   if (!updatedTask) {

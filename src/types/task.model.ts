@@ -20,6 +20,7 @@ export const zTaskSchema = z.object({
   type: z.string().min(1, { message: "Type is required" }),
   createdOn: z.string(),
   status: z.nativeEnum(TASK_STATUS),
+  assignedTo: z.string().optional(),
 });
 
 // Zod schema for task input (used in forms)

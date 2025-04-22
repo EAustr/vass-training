@@ -24,6 +24,9 @@ export default async function TaskDetailsPage({ params }: { params: { id: string
       <p>
         <strong>Status:</strong> {task.status.toUpperCase()}
       </p>
+      <p>
+        <strong>Assigned To:</strong> {task.assignedTo || "Unassigned"}
+      </p>
       <Link href={`/tasks/${task.id}/edit`} className="px-5 py-2  bg-blue-500 text-white rounded hover:bg-blue-600 mt-4">
           Edit
       </Link>

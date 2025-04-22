@@ -49,6 +49,15 @@ export default function TaskEdit({ task }: Props) {
             <option value={TASK_STATUS.DONE}>Done</option>
           </select>
         </div>
+        <div>
+          <label className="block font-medium">Assigned To</label>
+          <input
+            type="text"
+            name="assignedTo"
+            defaultValue={task.assignedTo || "Unassigned"}
+            className="w-full p-2 border rounded"
+            />
+        </div>
         <button
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
