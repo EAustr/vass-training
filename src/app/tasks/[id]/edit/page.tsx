@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import TaskEdit from "@/components/task-edit";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
-export default async function TaskEditPage({ params }: Props) {
+export default async function TaskEditPage(props: Props) {
+  const params = await props.params;
   const task = await getTaskById(params.id);
 
   if (!task) {

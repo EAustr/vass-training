@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { Task, TASK_STATUS, TaskFormSchema, TaskUpdateSchema } from "../types/task.model";
+import { Task, TASK_STATUS, taskFormSchema, taskUpdateSchema } from "../types/task.model";
 import dbConnect from "@/lib/mongodb";
 import { mTaskSchema } from "@/models/task.mongoose";
 import { redirect } from "next/navigation";
