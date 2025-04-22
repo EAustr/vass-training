@@ -24,6 +24,7 @@ export const zTaskSchema = z.object({
 
 // Zod schema for task input (used in forms)
 export const TaskFormSchema = zTaskSchema.omit({ id: true, createdOn: true });
+export const TaskUpdateSchema = zTaskSchema.omit({ createdOn: true });
 
 export type Task = z.infer<typeof zTaskSchema>;
 export type TaskInput = z.infer<typeof TaskFormSchema>;

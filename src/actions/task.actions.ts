@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { Task, TASK_STATUS, TaskFormSchema } from "../types/task.model";
+import { Task, TASK_STATUS, TaskFormSchema, TaskUpdateSchema } from "../types/task.model";
 import dbConnect from "@/lib/mongodb";
 import { mTaskSchema } from "@/models/task.mongoose";
 import { redirect } from "next/navigation";
@@ -79,23 +79,23 @@ export async function getTaskById(id: string): Promise<Task | null> {
 }
 
 export async function updateTask(formData: FormData) {
-  const id = formData.get("id");
-  const title = formData.get("title");
-  const description = formData.get("description");
-  const type = formData.get("type");
-  const status = formData.get("status");
+  const inputData = Object.fromEntries(formData.entries());
+  const parsedData = TaskUpdateSchema.safeParse(inputData);
 
-  if (!id || typeof id !== "string") {
-    throw new Error("Invalid ID format");
-  }
-
+  if (!parsedData.success) {
+    throw new Error("Invalid data provided for task update");
+  }  
+  
+  const { id, title, description, type, status } = parsedData.data;
   await dbConnect();
-  await mTaskSchema.findByIdAndUpdate(id, {
-    title,
-    description,
-    type,
-    status,
-  });
+  const updatedTask = await mTaskSchema.findByIdAndUpdate(
+    id,
+    { title, description, type, status },
+    { new: true }
+  );
+  if (!updatedTask) {
+    throw new Error("Task not found");
+  }
 
   revalidatePath(`/tasks/${id}`);
   redirect(`/tasks/${id}`);

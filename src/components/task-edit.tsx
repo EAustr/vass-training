@@ -1,5 +1,5 @@
 import { updateTask } from "@/actions/task.actions";
-import { Task } from "@/types/task.model";
+import { Task, TASK_STATUS } from "@/types/task.model";
 
 type Props = {
   task: Task;
@@ -44,9 +44,9 @@ export default function TaskEdit({ task }: Props) {
             defaultValue={task.status}
             className="w-full p-2 border rounded"
           >
-            <option value="to-do">To-Do</option>
-            <option value="in-progress">In-Progress</option>
-            <option value="done">Done</option>
+            <option value={TASK_STATUS.TODO}>To Do</option>
+            <option value={TASK_STATUS.IN_PROGRESS}>In Progress</option>
+            <option value={TASK_STATUS.DONE}>Done</option>
           </select>
         </div>
         <button

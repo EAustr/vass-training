@@ -14,7 +14,7 @@ export default async function TaskEditPage({ params }: Props) {
   }
 
   return (
-    <div className="p-4 border rounded-lg shadow-md">
+    <div className="w-full p-4 border rounded-lg shadow-md">
       <TaskEdit task={task} />
     </div>
   );
