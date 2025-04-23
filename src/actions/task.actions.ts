@@ -1,32 +1,34 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { Task, TASK_STATUS, taskFormSchema, taskUpdateSchema } from "../types/task.model";
+import { Task, TASK_STATUS, taskFormSchema, taskUpdateSchema, UNASSIGNED } from "../types/task.model";
 import dbConnect from "@/lib/mongodb";
 import { mTaskSchema } from "@/models/task.mongoose";
 import { redirect } from "next/navigation";
+import { mUserSchema } from "@/models/user.mongoose";
 
 export async function getTasks(): Promise<Task[]> {
   await dbConnect();
   const tasks = await mTaskSchema.find({}).lean();
-  
-  return tasks.map((task: any) => ({
+
+  return tasks.map((task): Task => ({
     id: task._id.toString(),
     title: task.title,
     description: task.description,
     type: task.type,
     createdOn: task.createdOn,
     status: task.status as TASK_STATUS,
+    assignedTo: task.assignedTo || UNASSIGNED,
   }));
 }
 
-export async function addTask(data: any) {
-  const parsedData = TaskFormSchema.safeParse(data);
+export async function addTask(data: TaskInput): Promise<Task> {
+  const parsedData = taskFormSchema.safeParse(data);
 
   if (!parsedData.success) {
     throw new Error("Invalid data provided for task creation");
   }
 
-  const { title, description, type, status } = parsedData.data;
+  const { title, description, type, status, assignedTo } = parsedData.data;
 
   await dbConnect();
   const createdTask = await mTaskSchema.create({
@@ -34,14 +36,19 @@ export async function addTask(data: any) {
     description,
     type,
     status,
+    assignedTo: assignedTo || UNASSIGNED,
     createdOn: new Date().toISOString(),
   });
-  
-  return {
-    ...createdTask.toObject(),
-    id: createdTask._id.toString(),
-  }
 
+  return {
+    id: createdTask._id.toString(),
+    title: createdTask.title,
+    description: createdTask.description,
+    type: createdTask.type,
+    createdOn: createdTask.createdOn.toString(),
+    status: createdTask.status,
+    assignedTo: createdTask.assignedTo || UNASSIGNED,
+  };
 }
 
 export async function deleteTask(formData: FormData) {
@@ -57,16 +64,14 @@ export async function deleteTask(formData: FormData) {
 
 export async function getTaskById(id: string): Promise<Task | null> {
   await dbConnect();
-  const task = await mTaskSchema.findById(id).lean<{
-    _id: { toString(): string };
-    title: string;
-    description: string;
-    type: string;
-    createdOn: string;
-    status: string;
-  }>();
+  const task = await mTaskSchema.findById(id).lean();
 
   if (!task) return null;
+
+  let assignedUser = null;
+  if (task.assignedTo && task.assignedTo !== UNASSIGNED) {
+    assignedUser = await mUserSchema.findById(task.assignedTo).lean();
+  }
 
   return {
     id: task._id.toString(),
@@ -75,22 +80,23 @@ export async function getTaskById(id: string): Promise<Task | null> {
     type: task.type,
     createdOn: task.createdOn,
     status: task.status as TASK_STATUS,
+    assignedTo: assignedUser || task.assignedTo
   };
 }
 
 export async function updateTask(formData: FormData) {
   const inputData = Object.fromEntries(formData.entries());
-  const parsedData = TaskUpdateSchema.safeParse(inputData);
+  const parsedData = taskUpdateSchema.safeParse(inputData);
 
   if (!parsedData.success) {
     throw new Error("Invalid data provided for task update");
   }  
   
-  const { id, title, description, type, status } = parsedData.data;
+  const { id, title, description, type, status, assignedTo } = parsedData.data;
   await dbConnect();
   const updatedTask = await mTaskSchema.findByIdAndUpdate(
     id,
-    { title, description, type, status },
+    { title, description, type, status, assignedTo },
     { new: true }
   );
   if (!updatedTask) {

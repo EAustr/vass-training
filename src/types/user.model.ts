@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { extendZod } from "@zodyac/zod-mongoose";
 
+export type User = {
+  id: string;
+  username: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+};
+
 extendZod(z);
 export const zUserSchema = z.object({
   id: z.string(),
