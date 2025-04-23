@@ -10,10 +10,9 @@ export default async function TaskDetailsPage({ params }: { params: { id: string
     notFound();
   }
 
-  const assignedToDisplay = 
-    typeof task.assignedTo === "object"
-      ? `${task.assignedTo.first_name} ${task.assignedTo.last_name} (${task.assignedTo.username})`
-      : UNASSIGNED;
+  const assignedToDisplay = task.assignedTo?._id
+    ? `${task.assignedTo.first_name} ${task.assignedTo.last_name} (${task.assignedTo.username})`
+    : UNASSIGNED;
 
   return (
     <div className="p-4 border rounded-lg shadow-md">

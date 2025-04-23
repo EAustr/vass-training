@@ -10,7 +10,7 @@ export async function getTasks(): Promise<Task[]> {
   await dbConnect();
   const tasks = await mTaskSchema.find({}).lean();
 
-  return tasks.map((task: any) => ({
+  return tasks.map((task): Task => ({
     id: task._id.toString(),
     title: task.title,
     description: task.description,
@@ -21,7 +21,7 @@ export async function getTasks(): Promise<Task[]> {
   }));
 }
 
-export async function addTask(data: any) {
+export async function addTask(data: TaskInput): Promise<Task> {
   const parsedData = taskFormSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -78,7 +78,7 @@ export async function getTaskById(id: string): Promise<Task | null> {
     title: task.title,
     description: task.description,
     type: task.type,
-    createdOn: task.createdOn instanceof Date ? task.createdOn.toISOString() : String(task.createdOn),
+    createdOn: task.createdOn,
     status: task.status as TASK_STATUS,
     assignedTo: assignedUser || task.assignedTo
   };

@@ -20,7 +20,7 @@ const TaskList = () => {
 
   return (
     <ul className="space-y-4 mt-6">
-      {tasks.map((task) => (
+      {tasks.map((task: Task) => (
         <li
           key={task.id}
           className="p-4 border rounded-lg shadow-md flex justify-between items-center"

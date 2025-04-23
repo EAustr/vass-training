@@ -9,7 +9,6 @@ export type User = {
   last_name: string;
 };
 
-
 extendZod(z);
 export const zUserSchema = z.object({
   id: z.string(),

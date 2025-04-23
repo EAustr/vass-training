@@ -7,7 +7,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="antialiased">
         <TaskProvider>
-          <main className="flex justify-center min-h-screen p-4 w-xl">{children}</main>
+          <main className="flex justify-center p-4 w-xl">{children}</main>
         </TaskProvider>
       </body>
     </html>

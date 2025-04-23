@@ -5,13 +5,7 @@ import { taskFormSchema, TaskInput, TASK_STATUS, UNASSIGNED } from "../types/tas
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTaskContext } from "@/app/context/task.context";
-
-type User = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  username: string;
-};
+import { User } from "../types/user.model";
 
 type TaskFormProps = {
   users: User[];
