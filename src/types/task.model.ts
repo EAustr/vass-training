@@ -8,6 +8,8 @@ export enum TASK_STATUS {
     DONE = "done",
 }
 
+export const UNASSIGNED = "UNASSIGNED";
+
 extendZod(z);
 
 export const zTaskSchema = z.object({

@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-import { Task, TASK_STATUS, taskFormSchema, taskUpdateSchema } from "../types/task.model";
+import { Task, TASK_STATUS, taskFormSchema, taskUpdateSchema, UNASSIGNED } from "../types/task.model";
 import dbConnect from "@/lib/mongodb";
 import { mTaskSchema } from "@/models/task.mongoose";
 import { redirect } from "next/navigation";
@@ -17,7 +17,7 @@ export async function getTasks(): Promise<Task[]> {
     type: task.type,
     createdOn: task.createdOn,
     status: task.status as TASK_STATUS,
-    assignedTo: task.assignedTo || "UNASSIGNED",
+    assignedTo: task.assignedTo || UNASSIGNED,
   }));
 }
 
@@ -36,13 +36,18 @@ export async function addTask(data: any) {
     description,
     type,
     status,
-    assignedTo: assignedTo || "UNASSIGNED",
+    assignedTo: assignedTo || UNASSIGNED,
     createdOn: new Date().toISOString(),
   });
 
   return {
-    ...createdTask.toObject(),
     id: createdTask._id.toString(),
+    title: createdTask.title,
+    description: createdTask.description,
+    type: createdTask.type,
+    createdOn: createdTask.createdOn.toString(),
+    status: createdTask.status,
+    assignedTo: createdTask.assignedTo || UNASSIGNED,
   };
 }
 
@@ -64,7 +69,7 @@ export async function getTaskById(id: string): Promise<Task | null> {
   if (!task) return null;
 
   let assignedUser = null;
-  if (task.assignedTo && task.assignedTo !== "UNASSIGNED") {
+  if (task.assignedTo && task.assignedTo !== UNASSIGNED) {
     assignedUser = await mUserSchema.findById(task.assignedTo).lean();
   }
 
@@ -75,9 +80,7 @@ export async function getTaskById(id: string): Promise<Task | null> {
     type: task.type,
     createdOn: task.createdOn instanceof Date ? task.createdOn.toISOString() : String(task.createdOn),
     status: task.status as TASK_STATUS,
-    assignedTo: assignedUser
-      ? `${assignedUser.first_name} ${assignedUser.last_name} (${assignedUser.username})`
-      : "Unassigned",
+    assignedTo: assignedUser || task.assignedTo
   };
 }
 

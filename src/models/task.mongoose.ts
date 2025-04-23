@@ -1,5 +1,5 @@
 import mongoose, { InferSchemaType} from "mongoose";
-import { TASK_STATUS } from "../types/task.model";
+import { TASK_STATUS, UNASSIGNED } from "../types/task.model";
 
 const TaskSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -11,7 +11,7 @@ const TaskSchema = new mongoose.Schema({
     enum: Object.values(TASK_STATUS),
     default: TASK_STATUS.TODO,
   },
-  assignedTo: { type: String, default: "UNASSIGNED" },
+  assignedTo: { type: String, default: UNASSIGNED },
 });
 
 export type TaskDoc = InferSchemaType<typeof TaskSchema> & { _id: mongoose.Types.ObjectId };
