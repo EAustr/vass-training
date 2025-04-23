@@ -56,7 +56,7 @@ export default async function TaskEdit({ task }: Props) {
           <label className="block font-medium">Assigned To</label>
           <select
             name="assignedTo"
-            defaultValue={typeof task.assignedTo === "object" ? task.assignedTo.id : UNASSIGNED}
+            defaultValue={task.assignedTo?.id ?? UNASSIGNED}
             className="w-full p-2 border rounded"
           >
             <option value={UNASSIGNED}>Unassigned</option>
