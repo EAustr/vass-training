@@ -1,5 +1,5 @@
 import { updateTask } from "@/actions/task.actions";
-import { Task, TASK_STATUS } from "@/types/task.model";
+import { Task, TASK_STATUS, UNASSIGNED } from "@/types/task.model";
 import { getUsers } from "@/actions/user.actions";
 
 type Props = {
@@ -56,7 +56,7 @@ export default async function TaskEdit({ task }: Props) {
           <label className="block font-medium">Assigned To</label>
           <select
             name="assignedTo"
-            defaultValue={task.assignedTo?.id ?? UNASSIGNED}
+            defaultValue={task.assignedTo ?? UNASSIGNED}
             className="w-full p-2 border rounded"
           >
             <option value={UNASSIGNED}>Unassigned</option>

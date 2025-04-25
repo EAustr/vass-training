@@ -21,5 +21,5 @@ export const zUserSchema = z.object({
 // Zod schema for user input (used in forms)
 export const UserFormSchema = zUserSchema.omit({ id: true });
 
-export type User = z.infer<typeof zUserSchema>;
+export type zUser = z.infer<typeof zUserSchema>;
 export type UserInput = z.infer<typeof UserFormSchema>;

@@ -2,6 +2,7 @@ import { getTaskById } from "@/actions/task.actions";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { UNASSIGNED } from "@/types/task.model";
+import { getUserById } from "@/actions/user.actions";
 
 export default async function TaskDetailsPage({ params }: { params: { id: string } }) {
   const task = await getTaskById(params.id);
@@ -10,10 +11,15 @@ export default async function TaskDetailsPage({ params }: { params: { id: string
     notFound();
   }
 
-  const assignedToDisplay = task.assignedTo?._id
-    ? `${task.assignedTo.first_name} ${task.assignedTo.last_name} (${task.assignedTo.username})`
-    : UNASSIGNED;
+  let assignedToDisplay = UNASSIGNED;
 
+  if (task.assignedTo && task.assignedTo !== UNASSIGNED) {
+    const user = await getUserById(task.assignedTo); // Fetch user details using the user ID
+    if (user) {
+      assignedToDisplay = `${user.first_name} ${user.last_name} (${user.username})`;
+    }
+  }
+  
   return (
     <div className="p-4 border rounded-lg shadow-md">
       <h3 className="font-bold text-xl mb-4">Task Details</h3>

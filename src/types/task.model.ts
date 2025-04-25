@@ -30,4 +30,4 @@ export const taskFormSchema = zTaskSchema.omit({ id: true, createdOn: true });
 export const taskUpdateSchema = zTaskSchema.omit({ createdOn: true });
 
 export type Task = z.infer<typeof zTaskSchema>;
-export type TaskInput = z.infer<typeof TaskFormSchema>;
+export type TaskInput = z.infer<typeof taskFormSchema>;
